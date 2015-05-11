@@ -2,20 +2,15 @@
 import cv2
 import numpy as np
 import math
-import os
-from itertools import combinations
-import glob
-import threading
-import time
 import matplotlib.pyplot as plt
 
-MAX_HEIGHT = 2000.00
+MAX_HEIGHT = 1000.00
 
 SIFT_SIFT = 0
 FAST_BRIEF = 1
 ORB_ORB = 2
 
-CURRENT_METHOD = SIFT_SIFT
+CURRENT_METHOD = 2
 
 IMG_COUNT = 6
 IMG_PREFIX = 'img'
@@ -106,21 +101,32 @@ class Method:
         self._method = -1
         self._detector = None
         self._matcher = None
+        self._extractor = None
 
     def set(self, method=SIFT_SIFT):
         self._method = method
         print method
+
+        if method == FAST_BRIEF:
+            self._detector = cv2.FastFeatureDetector(70)
+            self._extractor = cv2.DescriptorExtractor_create("BRIEF")
+            self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+
         if method == SIFT_SIFT:
-            self._detector = cv2.xfeatures2d.SIFT_create()
-            index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-            search_params = dict(checks=64)
+            self._detector = cv2.SIFT()
             # Faster than brute force, considering that sift is a very expensive detector
-            self._matcher = cv2.BFMatcher()#cv2.FlannBasedMatcher(index_params, search_params)
-        else:
-            if method == ORB_ORB:
-                self._detector = cv2.ORB_create()
-                # HAMMING because orb create a set binary descriptors
-                self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+            # index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+            # search_params = dict(checks=64)
+            # cv2.FlannBasedMatcher(index_params, search_params)
+            self._matcher = cv2.BFMatcher()
+
+        if method == ORB_ORB:
+            self._detector = cv2.ORB()
+            # HAMMING because orb create a set binary descriptors
+            self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+
+    def get_extractor(self):
+        return self._extractor
 
     def get_detector(self):
         return self._detector
@@ -148,9 +154,10 @@ class ImageBlock:
 
         h, w = self._image.shape[:2]
 
-        if h > MAX_HEIGHT:
-            scale = MAX_HEIGHT / h
-            self._image = cv2.resize(self._image, None, fx=scale, fy=scale)
+        if (Method().get_method() == SIFT_SIFT) or (Method().get_method() == FAST_BRIEF):
+            if h > MAX_HEIGHT:
+                scale = MAX_HEIGHT / h
+                self._image = cv2.resize(self._image, None, fx=scale, fy=scale)
 
     def get_image(self):
         return self._image
@@ -186,7 +193,10 @@ class ImageBlock:
         print "detect " + self.get_path()
         kp = detector.detect(gray, mask)
         print "compute " + self.get_path()
-        (kp, desc) = detector.compute(gray, kp, mask)
+        if Method().get_method() == FAST_BRIEF:
+            (kp, desc) = Method().get_extractor().compute(gray, kp, mask)
+        else:
+            (kp, desc) = detector.compute(gray, kp, mask)
         self._keypoints = kp
         self._descriptors = desc
 
@@ -203,7 +213,12 @@ class ImageBlock:
                 if m.distance < threshold * n.distance:
                     good.append(m)
         else:
-            good = matches[:20]
+            print 'Sorting'
+            matches = sorted(matches, key=lambda x: x.distance)
+            # for match in matches:
+            #     print match.distance
+            good = matches[:10]
+            print 'finished sort'
 
         return good
 
@@ -241,7 +256,7 @@ class Mosaic:
         matches = center_block.match(target)
         homography = center_block.get_homography(target, matches)
         inv_homography = np.linalg.inv(homography)
-        (min_x, min_y, max_x, max_y) = findDimensions(target.get_image(), inv_homography)
+        (min_x, min_y, max_x, max_y) = get_dimensions(target.get_image(), inv_homography)
         # Adjust max_x and max_y by base img size
         max_x = max(max_x, center_block.get_image().shape[1])
         max_y = max(max_y, center_block.get_image().shape[0])
@@ -305,27 +320,28 @@ class Mosaic:
 
         # for b, t in img_combinations:
 
-        block34 = self.combine(block_list[2], block_list[3], 'img34.png')
-        block34.detect(left=3000)
+        block34 = self.combine(block_list[3], block_list[2], 'img34.png')
+        block34.detect(left=5000)
         block234 = self.combine(block34, block_list[1], 'img234.png')
         del block34
 
-        block234.detect(right=3000)
+        block234.detect(right=5000)
         block2345 = self.combine(block234, block_list[4], 'img2345.png')
         del block234
 
-        block2345.detect(left=3000)
-        block12345 = self.combine(block2345, block_list[0], 'img12345.png')
+        block2345.detect(right=5000)
+        block23456 = self.combine(block2345, block_list[5], 'img123456.png')
         del block2345
 
-        block12345.detect(right=3000)
-        block123456 = self.combine(block12345, block_list[5], 'img123456.png')
-        del block12345
+        block23456.detect(left=5000)
+        block123456 = self.combine(block23456, block_list[0], 'img12345.png')
+        del block23456
+
         show_image(block123456.get_image())
         del block123456
 
 
-def findDimensions(image, homography):
+def get_dimensions(image, homography):
     base_p1 = np.ones(3, np.float32)
     base_p2 = np.ones(3, np.float32)
     base_p3 = np.ones(3, np.float32)
@@ -351,22 +367,22 @@ def findDimensions(image, homography):
 
         normal_pt = np.array([hp_arr[0] / hp_arr[2], hp_arr[1] / hp_arr[2]], np.float32)
 
-        if ( max_x == None or normal_pt[0, 0] > max_x ):
+        if (max_x is None) or (normal_pt[0, 0] > max_x):
             max_x = normal_pt[0, 0]
 
-        if ( max_y == None or normal_pt[1, 0] > max_y ):
+        if (max_y is None) or (normal_pt[1, 0] > max_y):
             max_y = normal_pt[1, 0]
 
-        if ( min_x == None or normal_pt[0, 0] < min_x ):
+        if (min_x is None) or (normal_pt[0, 0] < min_x):
             min_x = normal_pt[0, 0]
 
-        if ( min_y == None or normal_pt[1, 0] < min_y ):
+        if (min_y is None) or (normal_pt[1, 0] < min_y):
             min_y = normal_pt[1, 0]
 
     min_x = min(0, min_x)
     min_y = min(0, min_y)
 
-    return (min_x, min_y, max_x, max_y)
+    return min_x, min_y, max_x, max_y
 
 
 if __name__ == "__main__":
