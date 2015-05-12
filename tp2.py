@@ -4,6 +4,8 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 
+MASK_SIZE = 3000
+
 MAX_HEIGHT = 1000.00
 
 SIFT_SIFT = 0
@@ -113,7 +115,7 @@ class Method:
             self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
         if method == SIFT_SIFT:
-            self._detector = cv2.SIFT()
+            self._detector = cv2.SIFT(400)
             # Faster than brute force, considering that sift is a very expensive detector
             # index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
             # search_params = dict(checks=64)
@@ -121,7 +123,7 @@ class Method:
             self._matcher = cv2.BFMatcher()
 
         if method == ORB_ORB:
-            self._detector = cv2.ORB()
+            self._detector = cv2.ORB(400)
             # HAMMING because orb create a set binary descriptors
             self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
@@ -185,7 +187,7 @@ class ImageBlock:
             mask[:, :left] = 255
 
         if right is not None:
-            mask[img_h - right:, :] = 255
+            mask[:, :img_w - right] = 255
 
         # detecting key points and regions
         detector = Method().get_detector()
@@ -321,19 +323,19 @@ class Mosaic:
         # for b, t in img_combinations:
 
         block34 = self.combine(block_list[3], block_list[2], 'img34.png')
-        block34.detect(left=5000)
+        block34.detect(left=MASK_SIZE)
         block234 = self.combine(block34, block_list[1], 'img234.png')
         del block34
 
-        block234.detect(right=5000)
+        block234.detect(right=MASK_SIZE)
         block2345 = self.combine(block234, block_list[4], 'img2345.png')
         del block234
 
-        block2345.detect(right=5000)
+        block2345.detect(right=MASK_SIZE)
         block23456 = self.combine(block2345, block_list[5], 'img123456.png')
         del block2345
 
-        block23456.detect(left=5000)
+        block23456.detect(left=MASK_SIZE)
         block123456 = self.combine(block23456, block_list[0], 'img12345.png')
         del block23456
 
