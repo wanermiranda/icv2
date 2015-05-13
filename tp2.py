@@ -251,7 +251,7 @@ class ImageBlock:
 
     def warp(self, h, new_h, new_w, min_x, min_y):
         img_h, img_w = self._image.shape[:2]
-        warped_img = np.zeros((new_h+1, new_w+1, 3), np.uint8)
+        warped_img = np.zeros((new_h, new_w, 3), np.uint8)
         w = 1
         for y in range(img_h):
             for x in range(img_w):
@@ -269,7 +269,7 @@ class Mosaic:
         matches = center_block.match(target)
         homography = center_block.get_homography(target, matches)
         inv_homography = np.linalg.inv(homography)
-        (min_x, min_y, max_x, max_y) = get_dimensions(target.get_image(), inv_homography)
+        (min_x, min_y, max_x, max_y) = get_dimensions(target.get_image(), homography)
         # Adjust max_x and max_y by base img size
         max_x = max(max_x, center_block.get_image().shape[1])
         max_y = max(max_y, center_block.get_image().shape[0])
@@ -283,18 +283,20 @@ class Mosaic:
         if min_y < 0:
             min_y *= -1
 
-        new_h = max_y + min_y + 100
-        new_w = max_x + min_x + 100
+        new_h = max_y + 100 #+ min_y + 100
+        new_w = max_x + 100 #+ min_x + 100
 
+        img_w = new_w + 1
+        img_h = new_h + 1
         # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
-        target_img_wrp = target.warp(homography, new_h, new_w, min_x, min_y)
+        target_img_wrp = target.warp(inv_homography, new_h, new_w, min_x, min_y)
         # center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
         center_img_wrp = center_block.warp(inv_homography, new_h, new_w, min_x, min_y)
 
         (ret, data_map) = cv2.threshold(cv2.cvtColor(center_img_wrp, cv2.COLOR_BGR2GRAY),
                                         0, 255, cv2.THRESH_BINARY)
 
-        enlarged_base_img = np.zeros((img_h+1, img_w+1, 3), np.uint8)
+        enlarged_base_img = np.zeros((img_h, img_w, 3), np.uint8)
         # Now add the warped image
         save_image(target_img_wrp, 'wrapped_' + target.get_path())
         save_image(center_img_wrp, 'wrapped_' + center_block.get_path())
