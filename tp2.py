@@ -4,15 +4,15 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 
-MASK_SIZE = 3000
+MASK_SIZE = 2000
 
-MAX_HEIGHT = 1000.00
+MAX_HEIGHT = 800.00
 
 SIFT_SIFT = 0
 FAST_BRIEF = 1
 ORB_ORB = 2
 
-CURRENT_METHOD = 2
+CURRENT_METHOD = 0
 
 IMG_COUNT = 6
 IMG_PREFIX = 'img'
@@ -110,7 +110,7 @@ class Method:
         print method
 
         if method == FAST_BRIEF:
-            self._detector = cv2.FastFeatureDetector(70)
+            self._detector = cv2.FastFeatureDetector()
             self._extractor = cv2.DescriptorExtractor_create("BRIEF")
             self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
@@ -123,7 +123,7 @@ class Method:
             self._matcher = cv2.BFMatcher()
 
         if method == ORB_ORB:
-            self._detector = cv2.ORB(400)
+            self._detector = cv2.ORB(edgeThreshold=60)
             # HAMMING because orb create a set binary descriptors
             self._matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
@@ -156,10 +156,10 @@ class ImageBlock:
 
         h, w = self._image.shape[:2]
 
-        if (Method().get_method() == SIFT_SIFT) or (Method().get_method() == FAST_BRIEF):
-            if h > MAX_HEIGHT:
-                scale = MAX_HEIGHT / h
-                self._image = cv2.resize(self._image, None, fx=scale, fy=scale)
+        # if (Method().get_method() == SIFT_SIFT) or (Method().get_method() == FAST_BRIEF):
+        if h > MAX_HEIGHT:
+            scale = MAX_HEIGHT / h
+            self._image = cv2.resize(self._image, None, fx=scale, fy=scale)
 
     def get_image(self):
         return self._image
@@ -184,21 +184,21 @@ class ImageBlock:
             mask.fill(255)
 
         if left is not None:
-            mask[:, :left] = 255
+            mask[:left, :] = 255
 
         if right is not None:
-            mask[:, :img_w - right] = 255
+            mask[:img_w - right, :] = 255
 
         # detecting key points and regions
         detector = Method().get_detector()
 
         print "detect " + self.get_path()
-        kp = detector.detect(gray, mask)
+        kp = detector.detect(gray)  # , mask)
         print "compute " + self.get_path()
         if Method().get_method() == FAST_BRIEF:
-            (kp, desc) = Method().get_extractor().compute(gray, kp, mask)
+            (kp, desc) = Method().get_extractor().compute(gray, kp)  # , mask)
         else:
-            (kp, desc) = detector.compute(gray, kp, mask)
+            (kp, desc) = detector.compute(gray, kp)  # , mask)
         self._keypoints = kp
         self._descriptors = desc
 
@@ -218,7 +218,7 @@ class ImageBlock:
             print 'Sorting'
             matches = sorted(matches, key=lambda x: x.distance)
             # for match in matches:
-            #     print match.distance
+            # print match.distance
             good = matches[:10]
             print 'finished sort'
 
@@ -249,9 +249,20 @@ class ImageBlock:
 
         return matrix_h
 
+    def warp(self, h, new_h, new_w):
+        img_h, img_w = self._image.shape[:2]
+        warped_img = np.zeros((new_h+1, new_w+1, 3), np.uint8)
+        w = 1
+        for y in range(img_h+1):
+            for x in range(img_w+1):
+                x1 = (h[0, 0]*x) + (h[1, 0]*y) + (h[2, 0]*w)
+                y1 = (h[0, 1]*x) + (h[1, 1]*y) + (h[2, 1]*w)
+                warped_img[y1, x1] = self._image[y, x]
+
+        return warped_img
+
 
 class Mosaic:
-
     @staticmethod
     def get_wrap_image(center_block, target):
         print "Matching " + center_block.get_path() + " and " + target.get_path()
@@ -274,13 +285,10 @@ class Mosaic:
 
         img_w = int(math.ceil(max_x))
         img_h = int(math.ceil(max_y))
-        target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
-
-        # img = cv2.half()
-        # cv::Mat half(result,cv::Rect(0,0,image2.cols,image2.rows));
-        # show_image(target_img_wrp)
-
-        center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
+        # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
+        target_img_wrp = target.warp(inv_homography, img_h, img_w)
+        # center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
+        center_img_wrp = center_block.warp(homography, img_h, img_w)
 
         (ret, data_map) = cv2.threshold(cv2.cvtColor(center_img_wrp, cv2.COLOR_BGR2GRAY),
                                         0, 255, cv2.THRESH_BINARY)
@@ -323,24 +331,30 @@ class Mosaic:
         # for b, t in img_combinations:
 
         block34 = self.combine(block_list[3], block_list[2], 'img34.png')
-        block34.detect(left=MASK_SIZE)
-        block234 = self.combine(block34, block_list[1], 'img234.png')
-        del block34
+        show_image(block34.get_image())
 
-        block234.detect(right=MASK_SIZE)
-        block2345 = self.combine(block234, block_list[4], 'img2345.png')
-        del block234
-
-        block2345.detect(right=MASK_SIZE)
-        block23456 = self.combine(block2345, block_list[5], 'img123456.png')
-        del block2345
-
-        block23456.detect(left=MASK_SIZE)
-        block123456 = self.combine(block23456, block_list[0], 'img12345.png')
-        del block23456
-
-        show_image(block123456.get_image())
-        del block123456
+        # block34.detect(left=MASK_SIZE)
+        #
+        # block234 = self.combine(block34, block_list[1], 'img234.png')
+        # del block34
+        #
+        # block234.detect(right=MASK_SIZE)
+        #
+        # block2345 = self.combine(block234, block_list[4], 'img2345.png')
+        # del block234
+        #
+        # block2345.detect(right=MASK_SIZE)
+        #
+        # block23456 = self.combine(block2345, block_list[5], 'img23456.png')
+        # del block2345
+        #
+        # block23456.detect(left=MASK_SIZE)
+        #
+        # block123456 = self.combine(block23456, block_list[0], 'img123456.png')
+        # del block23456
+        #
+        # show_image(block123456.get_image())
+        # del block123456
 
 
 def get_dimensions(image, homography):
@@ -400,7 +414,7 @@ __author__ = 'gorigan'
 #
 # matches_mask = mask.ravel().tolist()
 #
-#     h, w = self._image.shape[:2]
+# h, w = self._image.shape[:2]
 #     pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
 #     dst = cv2.perspectiveTransform(pts, homography)
 #
