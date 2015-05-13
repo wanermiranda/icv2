@@ -249,14 +249,14 @@ class ImageBlock:
 
         return matrix_h
 
-    def warp(self, h, new_h, new_w):
+    def warp(self, h, new_h, new_w, min_x, min_y):
         img_h, img_w = self._image.shape[:2]
         warped_img = np.zeros((new_h+1, new_w+1, 3), np.uint8)
         w = 1
-        for y in range(img_h+1):
-            for x in range(img_w+1):
-                x1 = (h[0, 0]*x) + (h[1, 0]*y) + (h[2, 0]*w)
-                y1 = (h[0, 1]*x) + (h[1, 1]*y) + (h[2, 1]*w)
+        for y in range(img_h):
+            for x in range(img_w):
+                x1 = min_x + (h[0, 0]*x) + (h[1, 0]*y) + (h[2, 0]*w)
+                y1 = min_y + (h[0, 1]*x) + (h[1, 1]*y) + (h[2, 1]*w)
                 warped_img[y1, x1] = self._image[y, x]
 
         return warped_img
@@ -273,27 +273,28 @@ class Mosaic:
         # Adjust max_x and max_y by base img size
         max_x = max(max_x, center_block.get_image().shape[1])
         max_y = max(max_y, center_block.get_image().shape[0])
-        move_h = np.matrix(np.identity(3), np.float32)
+
+        img_w = int(math.ceil(max_x)) + 100
+        img_h = int(math.ceil(max_y)) + 100
+
         if min_x < 0:
-            move_h[0, 2] += -min_x
-            max_x += -min_x
+            min_x *= -1
+
         if min_y < 0:
-            move_h[1, 2] += -min_y
-            max_y += -min_y
+            min_y *= -1
 
-        mod_inv_h = move_h * inv_homography
+        new_h = max_y + min_y + 100
+        new_w = max_x + min_x + 100
 
-        img_w = int(math.ceil(max_x))
-        img_h = int(math.ceil(max_y))
         # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
-        target_img_wrp = target.warp(inv_homography, img_h, img_w)
+        target_img_wrp = target.warp(homography, new_h, new_w, min_x, min_y)
         # center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
-        center_img_wrp = center_block.warp(homography, img_h, img_w)
+        center_img_wrp = center_block.warp(inv_homography, new_h, new_w, min_x, min_y)
 
         (ret, data_map) = cv2.threshold(cv2.cvtColor(center_img_wrp, cv2.COLOR_BGR2GRAY),
                                         0, 255, cv2.THRESH_BINARY)
 
-        enlarged_base_img = np.zeros((img_h, img_w, 3), np.uint8)
+        enlarged_base_img = np.zeros((img_h+1, img_w+1, 3), np.uint8)
         # Now add the warped image
         save_image(target_img_wrp, 'wrapped_' + target.get_path())
         save_image(center_img_wrp, 'wrapped_' + center_block.get_path())
