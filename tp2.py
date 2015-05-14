@@ -241,7 +241,7 @@ class ImageBlock:
         dst_pts = np.float32([target_kp[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
 
         print "homography"
-        matrix_h, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, ransacReprojThreshold=5)
+        matrix_h, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, ransacReprojThreshold=8)
 
         print(self.determinant(matrix_h))
 
@@ -273,9 +273,9 @@ class Mosaic:
         homography = center_block.get_homography(target, matches)
         inv_homography = np.linalg.inv(homography)
         img_h, img_w = center_block.get_image().shape[:2]
-        # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
         new_h = img_h * 1.5
         new_w = img_w * 2
+        # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
         target_img_wrp = target.warp(homography, new_h, new_w, 0, 200)
         # center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
         center_img_wrp = center_block.warp(np.identity(3), new_h, new_w, 0, 200)
