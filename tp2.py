@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 MASK_SIZE = 2000
 
-MAX_HEIGHT = 800.00
+MAX_HEIGHT = 1200.00
 
 SIFT_SIFT = 0
 FAST_BRIEF = 1
@@ -241,7 +241,7 @@ class ImageBlock:
         dst_pts = np.float32([target_kp[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
 
         print "homography"
-        matrix_h, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 3)
+        matrix_h, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, ransacReprojThreshold=5)
 
         print(self.determinant(matrix_h))
 
@@ -251,13 +251,16 @@ class ImageBlock:
 
     def warp(self, h, new_h, new_w, min_x, min_y):
         img_h, img_w = self._image.shape[:2]
+
         warped_img = np.zeros((new_h, new_w, 3), np.uint8)
         w = 1
         for y in range(img_h):
             for x in range(img_w):
                 x1 = min_x + (h[0, 0]*x) + (h[1, 0]*y) + (h[2, 0]*w)
                 y1 = min_y + (h[0, 1]*x) + (h[1, 1]*y) + (h[2, 1]*w)
-                warped_img[y1, x1] = self._image[y, x]
+
+                if (x1 < new_w-1) and (y1 < new_h-1) and (x1 >= 0) and (y1 >= 0):
+                    warped_img[y1, x1] = self._image[y, x]
 
         return warped_img
 
@@ -269,34 +272,18 @@ class Mosaic:
         matches = center_block.match(target)
         homography = center_block.get_homography(target, matches)
         inv_homography = np.linalg.inv(homography)
-        (min_x, min_y, max_x, max_y) = get_dimensions(target.get_image(), homography)
-        # Adjust max_x and max_y by base img size
-        max_x = max(max_x, center_block.get_image().shape[1])
-        max_y = max(max_y, center_block.get_image().shape[0])
-
-        img_w = int(math.ceil(max_x)) + 100
-        img_h = int(math.ceil(max_y)) + 100
-
-        if min_x < 0:
-            min_x *= -1
-
-        if min_y < 0:
-            min_y *= -1
-
-        new_h = max_y + 100 #+ min_y + 100
-        new_w = max_x + 100 #+ min_x + 100
-
-        img_w = new_w + 1
-        img_h = new_h + 1
+        img_h, img_w = center_block.get_image().shape[:2]
         # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
-        target_img_wrp = target.warp(inv_homography, new_h, new_w, min_x, min_y)
+        new_h = img_h * 1.5
+        new_w = img_w * 2
+        target_img_wrp = target.warp(homography, new_h, new_w, 0, 200)
         # center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
-        center_img_wrp = center_block.warp(inv_homography, new_h, new_w, min_x, min_y)
+        center_img_wrp = center_block.warp(np.identity(3), new_h, new_w, 0, 200)
 
         (ret, data_map) = cv2.threshold(cv2.cvtColor(center_img_wrp, cv2.COLOR_BGR2GRAY),
                                         0, 255, cv2.THRESH_BINARY)
 
-        enlarged_base_img = np.zeros((img_h, img_w, 3), np.uint8)
+        enlarged_base_img = np.zeros((new_h, new_w, 3), np.uint8)
         # Now add the warped image
         save_image(target_img_wrp, 'wrapped_' + target.get_path())
         save_image(center_img_wrp, 'wrapped_' + center_block.get_path())
@@ -333,7 +320,7 @@ class Mosaic:
 
         # for b, t in img_combinations:
 
-        block34 = self.combine(block_list[3], block_list[2], 'img34.png')
+        block34 = self.combine(block_list[2], block_list[3], 'img34.png')
         show_image(block34.get_image())
 
         # block34.detect(left=MASK_SIZE)
