@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 MASK_SIZE = 2000
 
-MAX_HEIGHT = 1200.00
+MAX_HEIGHT = 800.00
 
 SIFT_SIFT = 0
 FAST_BRIEF = 1
@@ -249,61 +249,98 @@ class ImageBlock:
 
         return matrix_h
 
-    def warp(self, h, new_h, new_w, min_x, min_y):
+    def get_dimensions(self, h):
+        img_h, img_w = self._image.shape[:2]
+        min_v = 0
+        min_u = 0
+        max_v = 0
+        max_u = 0
+        for y in range(img_h):
+            for x in range(img_w):
+                u = (h[0, 0]*x) + (h[0, 1]*y) + (h[0, 2])
+                v = (h[1, 0]*x) + (h[1, 1]*y) + (h[1, 2])
+                w = (h[2, 0]*x) + (h[2, 1]*y) + (h[2, 2])
+                u /= w
+                v /= w
+
+                if v < min_v:
+                    min_v = v
+
+                if u < min_u:
+                    min_u = u
+
+                if v > max_v:
+                    max_v = v
+
+                if u > max_u:
+                    max_u = u
+
+        min_u *= -1
+        min_v *= -1
+        max_u += min_u
+        max_v += min_v
+        return min_v, min_u, max_v, max_u
+
+    def warp(self, h, new_h, new_w, min_u=0, min_v=0):
         img_h, img_w = self._image.shape[:2]
 
         warped_img = np.zeros((new_h, new_w, 3), np.uint8)
-        w = 1
+
         for y in range(img_h):
             for x in range(img_w):
-                x1 = min_x + (h[0, 0]*x) + (h[1, 0]*y) + (h[2, 0]*w)
-                y1 = min_y + (h[0, 1]*x) + (h[1, 1]*y) + (h[2, 1]*w)
+                u = (h[0, 0]*x) + (h[0, 1]*y) + (h[0, 2])
+                v = (h[1, 0]*x) + (h[1, 1]*y) + (h[1, 2])
+                w = (h[2, 0]*x) + (h[2, 1]*y) + (h[2, 2])
+                u /= w
+                v /= w
 
-                if (x1 < new_w-1) and (y1 < new_h-1) and (x1 >= 0) and (y1 >= 0):
-                    warped_img[y1, x1] = self._image[y, x]
+                u += min_u
+                v += min_v
+
+                if (u < new_w-1) and (v < new_h-1) and (u >= 0) and (v >= 0):
+                    warped_img[v, u] = self._image[y, x]
 
         return warped_img
 
 
 class Mosaic:
     @staticmethod
-    def get_wrap_image(center_block, target):
-        print "Matching " + center_block.get_path() + " and " + target.get_path()
-        matches = center_block.match(target)
-        homography = center_block.get_homography(target, matches)
-        inv_homography = np.linalg.inv(homography)
-        img_h, img_w = center_block.get_image().shape[:2]
-        new_h = img_h * 1.5
-        new_w = img_w * 2
-        # target_img_wrp = cv2.warpPerspective(target.get_image(), mod_inv_h, (img_w, img_h))
-        target_img_wrp = target.warp(homography, new_h, new_w, 0, 200)
-        # center_img_wrp = cv2.warpPerspective(center_block.get_image(), move_h, (img_w, img_h))
-        center_img_wrp = center_block.warp(np.identity(3), new_h, new_w, 0, 200)
+    def get_wrap_image(center, target):
+        print "Matching " + center.get_path() + " and " + target.get_path()
+        matches = target.match(center)
+        homography = target.get_homography(center, matches)
+        # inv_homography = np.linalg.inv(homography)
+
+        min_y, min_x, new_h, new_w = target.get_dimensions(homography)
+
+        target_img_wrp = target.warp(homography, new_h, new_w)
+
+        center_img_wrp = center.warp(np.identity(3), new_h, new_w, min_y, min_x)
+
+        save_image(target_img_wrp, 'wrapped_' + target.get_path())
+        save_image(center_img_wrp, 'wrapped_' + center.get_path())
 
         (ret, data_map) = cv2.threshold(cv2.cvtColor(center_img_wrp, cv2.COLOR_BGR2GRAY),
                                         0, 255, cv2.THRESH_BINARY)
 
         enlarged_base_img = np.zeros((new_h, new_w, 3), np.uint8)
         # Now add the warped image
-        save_image(target_img_wrp, 'wrapped_' + target.get_path())
-        save_image(center_img_wrp, 'wrapped_' + center_block.get_path())
 
         enlarged_base_img = cv2.add(enlarged_base_img, target_img_wrp,
                                     mask=np.bitwise_not(data_map),
                                     dtype=cv2.CV_8U)
 
-        save_image(enlarged_base_img, 'wrapped_1_' + center_block.get_path())
+        save_image(enlarged_base_img, 'wrapped_1_' + center.get_path())
 
         final_img = cv2.add(enlarged_base_img, center_img_wrp,
                             dtype=cv2.CV_8U)
 
-        save_image(final_img, 'wrapped_2_' + center_block.get_path())
-        # img = cv2.half()
-        # cv::Mat half(result,cv::Rect(0,0,image2.cols,image2.rows));
+        save_image(final_img, 'wrapped_2_' + center.get_path())
+
         return final_img
 
     def combine(self, center_block, target_block, name):
-        result_image = self.get_wrap_image(center_block, target_block)
+        result_image = self.get_wrap_image(center=center_block, target=target_block)
         result_block = ImageBlock(name, image=result_image)
         save_image(result_image, name)
         return result_block
@@ -320,29 +357,33 @@ class Mosaic:
 
         # for b, t in img_combinations:
 
-        block34 = self.combine(block_list[2], block_list[3], 'img34.png')
-        show_image(block34.get_image())
 
-        # block34.detect(left=MASK_SIZE)
+        block34 = self.combine(center_block=block_list[2], target_block=block_list[3], name='img34.png')
+
+        block34.detect()
+        # #
+        block234 = self.combine(block_list[1], block34, 'img234.png')
+        del block34
+
         #
-        # block234 = self.combine(block34, block_list[1], 'img234.png')
-        # del block34
-        #
-        # block234.detect(right=MASK_SIZE)
-        #
+        block234.detect()
+
+        block1234 = self.combine(block234, block_list[0], 'img1234.png')
+        del block1234
+
         # block2345 = self.combine(block234, block_list[4], 'img2345.png')
         # del block234
         #
-        # block2345.detect(right=MASK_SIZE)
+        # block2345.detect()
         #
         # block23456 = self.combine(block2345, block_list[5], 'img23456.png')
         # del block2345
         #
-        # block23456.detect(left=MASK_SIZE)
-        #
-        # block123456 = self.combine(block23456, block_list[0], 'img123456.png')
+        # block23456.detect()
+
+        # block123456 = self.combine(block_list[0], block23456, 'img123456.png')
         # del block23456
-        #
+
         # show_image(block123456.get_image())
         # del block123456
 
