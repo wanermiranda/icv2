@@ -2,23 +2,39 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb86ebeb-6be3-4e4d-b88d-b24ec13c70c0" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Threading_Loops.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Threading_Loops" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/imagehelpers.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/threadingloops.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img1234.png" afterPath="$PROJECT_DIR$/img1234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img12345.png" afterPath="$PROJECT_DIR$/img12345.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img123456.png" afterPath="$PROJECT_DIR$/img123456.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img234.png" afterPath="$PROJECT_DIR$/img234.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img2345.png" afterPath="$PROJECT_DIR$/img2345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img34.png" afterPath="$PROJECT_DIR$/img34.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img1234.png" afterPath="$PROJECT_DIR$/wrapped_1_img1234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img12345.png" afterPath="$PROJECT_DIR$/wrapped_1_img12345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img234.png" afterPath="$PROJECT_DIR$/wrapped_1_img234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img2345.png" afterPath="$PROJECT_DIR$/wrapped_1_img2345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img3.jpg" afterPath="$PROJECT_DIR$/wrapped_1_img3.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img34.png" afterPath="$PROJECT_DIR$/wrapped_1_img34.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img1234.png" afterPath="$PROJECT_DIR$/wrapped_2_img1234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img12345.png" afterPath="$PROJECT_DIR$/wrapped_2_img12345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img234.png" afterPath="$PROJECT_DIR$/wrapped_2_img234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img2345.png" afterPath="$PROJECT_DIR$/wrapped_2_img2345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img3.jpg" afterPath="$PROJECT_DIR$/wrapped_2_img3.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img34.png" afterPath="$PROJECT_DIR$/wrapped_2_img34.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img1.jpg" afterPath="$PROJECT_DIR$/wrapped_img1.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img1234.png" afterPath="$PROJECT_DIR$/wrapped_img1234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img12345.png" afterPath="$PROJECT_DIR$/wrapped_img12345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img2.jpg" afterPath="$PROJECT_DIR$/wrapped_img2.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img234.png" afterPath="$PROJECT_DIR$/wrapped_img234.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img2345.png" afterPath="$PROJECT_DIR$/wrapped_img2345.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img3.jpg" afterPath="$PROJECT_DIR$/wrapped_img3.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img34.png" afterPath="$PROJECT_DIR$/wrapped_img34.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img4.jpg" afterPath="$PROJECT_DIR$/wrapped_img4.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img5.jpg" afterPath="$PROJECT_DIR$/wrapped_img5.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img6.jpg" afterPath="$PROJECT_DIR$/wrapped_img6.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tp2.py" afterPath="$PROJECT_DIR$/tp2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -47,59 +63,35 @@
       <file leaf-file-name="tp2.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tp2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.34" vertical-offset="6402" max-vertical-offset="8442">
-              <caret line="370" column="56" selection-start-line="370" selection-start-column="56" selection-end-line="370" selection-end-column="56" />
-              <folding />
+            <state vertical-scroll-proportion="0.516184" vertical-offset="3675" max-vertical-offset="8442">
+              <caret line="221" column="76" selection-start-line="221" selection-start-column="76" selection-end-line="221" selection-end-column="76" />
+              <folding>
+                <element signature="e#15#25#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="image.py" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/lib64/python2.7/site-packages/matplotlib-1.4.2-py2.7-linux-x86_64.egg/matplotlib/image.py">
+      <file leaf-file-name="threadingloops.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/threadingloops.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="7324" max-vertical-offset="25902">
-              <caret line="433" column="0" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="336" max-vertical-offset="1260">
+              <caret line="39" column="16" selection-start-line="39" selection-start-column="16" selection-end-line="39" selection-end-column="16" />
+              <folding>
+                <element signature="e#15#31#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="numeric.py" pinned="false" current-in-tab="false">
-        <entry file="file:///usr/lib64/python2.7/site-packages/numpy/core/numeric.py">
+      <file leaf-file-name="imagehelpers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/imagehelpers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="36598" max-vertical-offset="49086">
-              <caret line="2052" column="0" selection-start-line="2052" selection-start-column="0" selection-end-line="2052" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-1247972723/cv2/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="19353" max-vertical-offset="41760">
-              <caret line="1082" column="39" selection-start-line="1082" selection-start-column="39" selection-end-line="1082" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="init.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/git/wanermiranda/icv/init.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="252" max-vertical-offset="3402">
-              <caret line="26" column="42" selection-start-line="26" selection-start-column="42" selection-end-line="26" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="quadit.py" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/git/wanermiranda/icv/quadit.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3351" max-vertical-offset="5670">
-              <caret line="197" column="8" selection-start-line="197" selection-start-column="8" selection-end-line="197" selection-end-column="8" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1888" max-vertical-offset="2502">
+              <caret line="116" column="4" selection-start-line="116" selection-start-column="4" selection-end-line="116" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -112,14 +104,17 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/Threading_Loops.py" />
+        <option value="$PROJECT_DIR$/threadingloops.py" />
+        <option value="$PROJECT_DIR$/imagehelpers.py" />
         <option value="$PROJECT_DIR$/tp2.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="960" />
+    <option name="x" value="-1" />
     <option name="y" value="27" />
-    <option name="width" value="961" />
+    <option name="width" value="962" />
     <option name="height" value="1054" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -149,7 +144,7 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$USER_HOME$/git/wanermiranda/icv/quadit.py" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="preferences.keymap" />
+    <property name="options.lastSelected" value="editing.templates" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="FullScreen" value="false" />
@@ -158,6 +153,11 @@
     <option name="myPythonConsoleState">
       <console-settings />
     </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.tp2">
     <configuration default="false" name="tp2" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -178,6 +178,44 @@
       <RunnerSettings RunnerId="PyDebugRunner" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PyDebugRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Threading_Loops" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="icv2" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Threading_Loops.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="threadingloops" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="icv2" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/threadingloops.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -303,12 +341,16 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="1">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.tp2" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Threading_Loops" />
+      <item index="2" class="java.lang.String" itemvalue="Python.threadingloops" />
     </list>
     <recent_temporary>
-      <list size="1">
+      <list size="3">
         <item index="0" class="java.lang.String" itemvalue="Python.tp2" />
+        <item index="1" class="java.lang.String" itemvalue="Python.threadingloops" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Threading_Loops" />
       </list>
     </recent_temporary>
   </component>
@@ -365,31 +407,37 @@
       <option name="project" value="LOCAL" />
       <updated>1431575211701</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Starting warp perspective">
+      <created>1431695128466</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1431695128466</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="960" y="27" width="961" height="1054" extended-state="4" />
+    <frame x="-1" y="27" width="962" height="1054" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32905984" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3985043" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32905984" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19300106" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3985043" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32371795" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32905984" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="1060" y="127" width="753" height="853" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -438,13 +486,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/tp2.py</url>
-          <line>315</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="34" />
     </breakpoint-manager>
     <watches-manager>
@@ -460,7 +501,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7596">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -484,7 +527,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7578">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -508,7 +553,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7578">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -532,7 +579,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7596">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -556,7 +605,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7596">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -580,7 +631,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7596">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -604,7 +657,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7596">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -628,7 +683,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7416">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -652,7 +709,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7362">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -676,7 +735,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6624">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -700,7 +761,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6840">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -716,7 +779,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6750">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -732,7 +797,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2754">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -740,7 +807,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2124">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -748,14 +817,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.60333335" vertical-offset="5074" max-vertical-offset="19800">
           <caret line="302" column="0" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-1247972723/cv2/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="19353" max-vertical-offset="41760">
-          <caret line="1082" column="39" selection-start-line="1082" selection-start-column="39" selection-end-line="1082" selection-end-column="39" />
           <folding />
         </state>
       </provider>
@@ -768,18 +829,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib64/python2.7/site-packages/numpy/core/numeric.py">
+    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-1247972723/cv2/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="36598" max-vertical-offset="49086">
-          <caret line="2052" column="0" selection-start-line="2052" selection-start-column="0" selection-end-line="2052" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="41097" max-vertical-offset="41760">
+          <caret line="2294" column="4" selection-start-line="2294" selection-start-column="4" selection-end-line="2294" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/git/wanermiranda/icv/quadit.py">
+    <entry file="file:///usr/lib64/python2.7/site-packages/numpy/core/numeric.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3351" max-vertical-offset="5670">
-          <caret line="197" column="8" selection-start-line="197" selection-start-column="8" selection-end-line="197" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="36598" max-vertical-offset="49086">
+          <caret line="2052" column="0" selection-start-line="2052" selection-start-column="0" selection-end-line="2052" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -792,11 +853,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Threading_Loops">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="599">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/git/wanermiranda/icv/quadit.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1188" max-vertical-offset="5670">
+          <caret line="79" column="28" selection-start-line="79" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Threading_Loops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="426" max-vertical-offset="1026">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib64/python2.7/threading.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="13210" max-vertical-offset="24084">
+          <caret line="745" column="0" selection-start-line="745" selection-start-column="0" selection-end-line="745" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/threadingloops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="336" max-vertical-offset="1260">
+          <caret line="39" column="16" selection-start-line="39" selection-start-column="16" selection-end-line="39" selection-end-column="16" />
+          <folding>
+            <element signature="e#15#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imagehelpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1888" max-vertical-offset="2502">
+          <caret line="116" column="4" selection-start-line="116" selection-start-column="4" selection-end-line="116" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tp2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34" vertical-offset="6402" max-vertical-offset="8442">
-          <caret line="370" column="56" selection-start-line="370" selection-start-column="56" selection-end-line="370" selection-end-column="56" />
-          <folding />
+        <state vertical-scroll-proportion="0.516184" vertical-offset="3675" max-vertical-offset="8442">
+          <caret line="221" column="76" selection-start-line="221" selection-start-column="76" selection-end-line="221" selection-end-column="76" />
+          <folding>
+            <element signature="e#15#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

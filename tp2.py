@@ -2,9 +2,10 @@
 import cv2
 import numpy as np
 import math
-import matplotlib.pyplot as plt
+import imagehelpers as ih
+import threadingloops as tl
 
-MASK_SIZE = 2000
+MASK_SIZE = 500
 
 MAX_HEIGHT = 800.00
 
@@ -21,83 +22,8 @@ IMG_GROUND_TRUTH = 'groundtruth.jpg'
 FLANN_INDEX_KDTREE = 1
 
 
-# Support function to save images to files
-def save_image(img, name):
-    plt.imshow(img)
-    plt.savefig(name)
-
-
-# Support function to show images
-def show_image(img):
-    plt.imshow(img)
-    plt.show()
-
-
-# Support function to calc color histograms, if needed
-def image_hist(img):
-    colors_hist = np.zeros((3, 256))
-    for i in range(0, 3):
-        colors_hist[i, :256] = cv2.calcHist([img], [i], None, [256], [0, 256])[:256, 0]
-        max_bin = colors_hist[i, :256].max()
-        colors_hist[i, :256] /= max_bin
-    return colors_hist
-
-
-# Support function to calculate the mean squared error
-def get_mse(query, target):
-    (m, n) = query.shape[:2]
-    if (m == 3) and (n == 256):
-        query = query[0:3, 0:256]
-        target = target[0:3, 0:256]
-    # (m, n) = query.shape[:2]
-    # print str(m) + ", " + str(n)
-    sums = np.power(np.array(query) - np.array(target), 2).sum()
-    return sums / (m * n)
-
-
-# Support function to define the correlation factor between to images
-def get_size_factor(query, target, factor):
-    (target_h, target_w) = target.shape[:2]
-    (query_h, query_w) = query.shape[:2]
-    if query_h > query_w:
-        factor = (factor * target_h) / query_h
-    else:
-        factor = (factor * target_w) / query_w
-    return factor
-
-
-# Support function to define if the image surpass a limited size
-def get_base_scale(img, maximum):
-    (query_h, query_w) = img.shape[:2]
-    if query_h > query_w:
-        factor = maximum / query_h
-    else:
-        factor = maximum / query_w
-    return factor
-
-
-# Low pass filter
-def remove_noise(img):
-    kernel = np.ones((3, 3), np.float32) / 8
-    dst = cv2.filter2D(img, -1, kernel)
-    return dst
-
-
-# To keep the code clear applied to design patterns, decorator and singleton
-# since the method is selected once in a run
-def singleton(cls):
-    instances = {}
-
-    def get_instance():
-        if cls not in instances:
-            instances[cls] = cls()
-        return instances[cls]
-
-    return get_instance
-
-
 # The class used to collect the method used in the run, with its detectors and matcher
-@singleton
+@ih.singleton
 class Method:
     def __init__(self):
         self._method = -1
@@ -139,13 +65,29 @@ class Method:
     def get_method(self):
         return self._method
 
+    def get_good_matches(self, matches, threshold):
+        good = []
+        if self._method == SIFT_SIFT:
+            for m, n in matches:
+                if m.distance < threshold * n.distance:
+                    good.append(m)
+        else:
+            print 'Sorting'
+            matches = sorted(matches, key=lambda x: x.distance)
+            # for match in matches:
+            # print match.distance
+            good = matches[:10]
+            print 'finished sort'
 
-# The class responsible for the all the metadata and operations over the tiles to be compacted into a panorama
+        return good
+
+
 class ImageBlock:
     def __init__(self, path=None, image=None):
         self._descriptors = None
         self._keypoints = None
         self._path = None
+        self._homography = None
 
         if image is not None:
             self._path = path
@@ -156,7 +98,6 @@ class ImageBlock:
 
         h, w = self._image.shape[:2]
 
-        # if (Method().get_method() == SIFT_SIFT) or (Method().get_method() == FAST_BRIEF):
         if h > MAX_HEIGHT:
             scale = MAX_HEIGHT / h
             self._image = cv2.resize(self._image, None, fx=scale, fy=scale)
@@ -202,28 +143,6 @@ class ImageBlock:
         self._keypoints = kp
         self._descriptors = desc
 
-    @staticmethod
-    def determinant(homography):
-        return (homography[0, 1] * homography[1, 1] * homography[2, 2]) - (
-            homography[2, 0] * homography[1, 1] * homography[0, 2])
-
-    @staticmethod
-    def get_good_matches(matches, threshold):
-        good = []
-        if Method().get_method() == SIFT_SIFT:
-            for m, n in matches:
-                if m.distance < threshold * n.distance:
-                    good.append(m)
-        else:
-            print 'Sorting'
-            matches = sorted(matches, key=lambda x: x.distance)
-            # for match in matches:
-            # print match.distance
-            good = matches[:10]
-            print 'finished sort'
-
-        return good
-
     def match(self, target, threshold=0.7):
         print "Matching"
         matcher = Method().get_matcher()
@@ -232,118 +151,181 @@ class ImageBlock:
         else:
             matches = matcher.match(self._descriptors, target.get_descriptors())
 
-        good = self.get_good_matches(matches, threshold)
+        good = Method().get_good_matches(matches, threshold)
         return good
 
-    def get_homography(self, target, good_matches):
+    def get_homography(self):
+        return self._homography
+
+    def set_homography(self, homography):
+        self._homography = homography
+
+    def gen_homography(self, target, good_matches):
+        # filter only the good matches and reshape the vector for the findHomography
         src_pts = np.float32([(self._keypoints[m.queryIdx]).pt for m in good_matches]).reshape(-1, 1, 2)
+
         target_kp = target.get_keypoints()
+        # filter only the good matches and reshape the vector for the findHomography
         dst_pts = np.float32([target_kp[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
-
         print "homography"
-        matrix_h, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, ransacReprojThreshold=8)
-
-        print(self.determinant(matrix_h))
-
-        # self.print_lines(target, matrix_h, mask, good_matches)
+        matrix_h, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC)
+        print(ih.determinant(matrix_h))
 
         return matrix_h
 
-    def get_dimensions(self, h):
-        img_h, img_w = self._image.shape[:2]
-        min_v = 0
-        min_u = 0
-        max_v = 0
-        max_u = 0
-        for y in range(img_h):
-            for x in range(img_w):
-                u = (h[0, 0]*x) + (h[0, 1]*y) + (h[0, 2])
-                v = (h[1, 0]*x) + (h[1, 1]*y) + (h[1, 2])
-                w = (h[2, 0]*x) + (h[2, 1]*y) + (h[2, 2])
-                u /= w
-                v /= w
+    def get_new_dimensions(self, h):
 
-                if v < min_v:
-                    min_v = v
+        img_h, img_w = self.get_image().shape[:2]
 
-                if u < min_u:
-                    min_u = u
+        base_p1 = [0, 0]
+        base_p2 = [img_w, 0]
+        base_p3 = [0, img_h]
+        base_p4 = [img_w, img_h]
 
-                if v > max_v:
-                    max_v = v
+        max_x = 0
+        max_y = 0
+        min_x = 0
+        min_y = 0
 
-                if u > max_u:
-                    max_u = u
+        for pt in [base_p1, base_p2, base_p3, base_p4]:
 
-        min_u *= -1
-        min_v *= -1
-        max_u += min_u
-        max_v += min_v
-        return min_v, min_u, max_v, max_u
+            # transposed matrix
+            normal_pt = ih.warp_pure_pt(h, pt)
 
-    def warp(self, h, new_h, new_w, min_u=0, min_v=0):
-        img_h, img_w = self._image.shape[:2]
+            if normal_pt[0] > max_x:
+                max_x = normal_pt[0]
+
+            if normal_pt[1] > max_y:
+                max_y = normal_pt[1]
+
+            if normal_pt[0] < min_x:
+                min_x = normal_pt[0]
+
+            if normal_pt[1] < min_y:
+                min_y = normal_pt[1]
+
+        max_x += -1*min_x
+        max_y += -1*min_y
+
+        min_x *= -1
+        min_y *= -1
+
+        print min_y, min_x, max_y, max_x
+        return min_y, min_x, max_y, max_x
+
+    def warp_pure(self, h, new_h, new_w, min_u=0, min_v=0):
+        print 'Warp'
 
         warped_img = np.zeros((new_h, new_w, 3), np.uint8)
 
-        for y in range(img_h):
-            for x in range(img_w):
-                u = (h[0, 0]*x) + (h[0, 1]*y) + (h[0, 2])
-                v = (h[1, 0]*x) + (h[1, 1]*y) + (h[1, 2])
-                w = (h[2, 0]*x) + (h[2, 1]*y) + (h[2, 2])
-                u /= w
-                v /= w
-
-                u += min_u
-                v += min_v
-
-                if (u < new_w-1) and (v < new_h-1) and (u >= 0) and (v >= 0):
-                    warped_img[v, u] = self._image[y, x]
-
+        args = h, min_u, min_v, new_h, new_w
+        tl.ThreadingLoopsImage(4, self.get_image(), warped_img, ih.warp_pure_pixel, args).execute()
         return warped_img
 
+    def combine(self, target_block, name):
+        result_image = self.get_wrap_image(target=target_block)
+        result_block = ImageBlock(name, image=result_image)
+        ih.save_image(result_image, name)
+        return result_block
 
-class Mosaic:
-    @staticmethod
-    def get_wrap_image(center, target):
-        print "Matching " + center.get_path() + " and " + target.get_path()
-        matches = target.match(center)
-        homography = target.get_homography(center, matches)
-        # inv_homography = np.linalg.inv(homography)
+    def warp_target(self, homography, target):
+        loc_h, loc_w = self.get_image().shape[:2]
+        min_y, min_x, new_h, new_w = target.get_new_dimensions(homography)
+        min_y = int(math.ceil(min_y))
+        min_x = int(math.ceil(min_x))
+        new_w = int(math.ceil(new_w))
+        new_h = int(math.ceil(new_h))
+        if new_h < loc_h:
+            new_h = loc_h + min_y
+        if new_w < loc_w:
+            new_w = loc_w + min_x
+        target_img_wrp = target.warp_pure(homography, new_h, new_w, min_x, min_y)
+        ih.save_image(target_img_wrp, 'wrapped_' + target.get_path())
+        return min_x, min_y, new_h, new_w, target_img_wrp
 
-        min_y, min_x, new_h, new_w = target.get_dimensions(homography)
+    def blend_image(self, target, homography):
 
-        target_img_wrp = target.warp(homography, new_h, new_w)
+        min_x, min_y, new_h, new_w, target_img_wrp = self.warp_target(homography, target)
 
-        center_img_wrp = center.warp(np.identity(3), new_h, new_w, min_y, min_x)
+        self_img_wrp = self.warp_pure(np.identity(3), new_h, new_w, min_x, min_y)
+        ih.save_image(self_img_wrp, 'wrapped_' + self.get_path())
 
-        save_image(target_img_wrp, 'wrapped_' + target.get_path())
-        save_image(center_img_wrp, 'wrapped_' + center.get_path())
-
-        (ret, data_map) = cv2.threshold(cv2.cvtColor(center_img_wrp, cv2.COLOR_BGR2GRAY),
+        (ret, data_map) = cv2.threshold(cv2.cvtColor(self_img_wrp, cv2.COLOR_BGR2GRAY),
                                         0, 255, cv2.THRESH_BINARY)
 
         enlarged_base_img = np.zeros((new_h, new_w, 3), np.uint8)
-        # Now add the warped image
 
         enlarged_base_img = cv2.add(enlarged_base_img, target_img_wrp,
                                     mask=np.bitwise_not(data_map),
                                     dtype=cv2.CV_8U)
 
-        save_image(enlarged_base_img, 'wrapped_1_' + center.get_path())
+        ih.save_image(enlarged_base_img, 'wrapped_1_' + self.get_path())
 
-        final_img = cv2.add(enlarged_base_img, center_img_wrp,
+        final_img = cv2.add(enlarged_base_img, self_img_wrp,
                             dtype=cv2.CV_8U)
 
-        save_image(final_img, 'wrapped_2_' + center.get_path())
+        ih.save_image(final_img, 'wrapped_2_' + self.get_path())
 
         return final_img
 
-    def combine(self, center_block, target_block, name):
-        result_image = self.get_wrap_image(center=center_block, target=target_block)
-        result_block = ImageBlock(name, image=result_image)
-        save_image(result_image, name)
-        return result_block
+    def get_wrap_image(self, target):
+        print "Matching " + self.get_path() + " and " + target.get_path()
+        loc_h, loc_w = self.get_image().shape[:2]
+        matches = target.match(self)
+        ih.save_image(self.get_image(), 'self.jpg')
+        ih.save_image(target.get_image(), 'target.jpg')
+
+        self._homography = target.gen_homography(self, matches)
+
+        min_y, min_x, new_h, new_w = target.get_new_dimensions(self._homography)
+
+        min_y = int(math.ceil(min_y))
+        min_x = int(math.ceil(min_x))
+
+        new_w = int(math.ceil(new_w))
+        new_h = int(math.ceil(new_h))
+
+        if new_h < loc_h:
+            new_h = loc_h + min_y
+
+        if new_w < loc_w:
+            new_w = loc_w + min_x
+
+        # target_img_wrp = cv2.warpPerspective(target.get_image(), self._homography, (new_w, new_h))
+        # target.warp(self._homography, new_h, new_w)
+        target_img_wrp = target.warp_pure(self._homography, new_h, new_w, min_x, min_y)
+        # target_img_wrp = ih.apply_median(target_img_wrp, False)
+        ih.save_image(target_img_wrp, 'wrapped_' + target.get_path())
+
+        self_img_wrp = self.warp_pure(np.identity(3), new_h, new_w, min_x, min_y)
+        ih.save_image(self_img_wrp, 'wrapped_' + self.get_path())
+
+        (ret, data_map) = cv2.threshold(cv2.cvtColor(self_img_wrp, cv2.COLOR_BGR2GRAY),
+                                        0, 255, cv2.THRESH_BINARY)
+
+        enlarged_base_img = np.zeros((new_h, new_w, 3), np.uint8)
+
+        enlarged_base_img = cv2.add(enlarged_base_img, target_img_wrp,
+                                    mask=np.bitwise_not(data_map),
+                                    dtype=cv2.CV_8U)
+
+        ih.save_image(enlarged_base_img, 'no_median_wrapped_1_' + self.get_path())
+
+        # ih.apply_median(enlarged_base_img, False)
+
+        ih.save_image(enlarged_base_img, 'wrapped_1_' + self.get_path())
+
+        enlarged_base_img = cv2.fastNlMeansDenoisingColored(enlarged_base_img)
+
+        final_img = cv2.add(enlarged_base_img, self_img_wrp,
+                            dtype=cv2.CV_8U)
+
+        ih.save_image(final_img, 'wrapped_2_' + self.get_path())
+
+        return final_img
+
+
+class Mosaic:
 
     def __init__(self):
         Method().set(CURRENT_METHOD)
@@ -355,37 +337,53 @@ class Mosaic:
             img_block.detect()
             block_list.append(img_block)
 
+        h_list = []
+
+        for idx in range(0, IMG_COUNT-1):
+            next_img = block_list[idx+1]
+            main_img = block_list[idx]
+            matches = next_img.match(main_img)
+            homography = next_img.gen_homography(main_img, matches)
+            h_list.append(homography)
+
+        # result = ImageBlock('img12.jpg', image=block_list[0].blend_image(block_list[1], h_list[0]))
+        #
+        # min_x, min_y, new_h, new_w, target_img_wrp = block_list[2].warp_target(h_list[0], block_list[2])
+        #
+        # result = ImageBlock('img2_warp.jpg', target_img_wrp)
+        # result = ImageBlock('img123.jpg',  block_list[2].blend_image(result, h_list[1]))
+
+        result = block_list[3].combine(block_list[2], 'img34')
+        result.detect()
+
+        result = result.combine(block_list[1], 'img234')
+        result.detect()
+
+        result = result.combine(block_list[4], 'img2345')
+        result.detect()
+
+        result = result.combine(block_list[0], 'img12345')
+        result.detect()
+
+        result = result.combine(block_list[5], 'img123456')
+        result.detect()
+
         # for b, t in img_combinations:
-
-
-        block34 = self.combine(center_block=block_list[2], target_block=block_list[3], name='img34.png')
-
-        block34.detect()
-        # #
-        block234 = self.combine(block_list[1], block34, 'img234.png')
-        del block34
-
         #
-        block234.detect()
-
-        block1234 = self.combine(block234, block_list[0], 'img1234.png')
-        del block1234
-
-        # block2345 = self.combine(block234, block_list[4], 'img2345.png')
-        # del block234
+        # block12 = block_list[0].combine(target_block=block_list[1], name='img12.png')
+        # block12.detect(right=MASK_SIZE)
         #
-        # block2345.detect()
+        # block123 = block12.combine(target_block=block_list[2], name='img123.png')
+        # block123.detect(right=MASK_SIZE)
         #
-        # block23456 = self.combine(block2345, block_list[5], 'img23456.png')
-        # del block2345
+        # block1234 = block123.combine(target_block=block_list[3], name='img1234.png')
+        # block1234.detect(right=MASK_SIZE)
         #
-        # block23456.detect()
-
-        # block123456 = self.combine(block_list[0], block23456, 'img123456.png')
-        # del block23456
-
-        # show_image(block123456.get_image())
-        # del block123456
+        # block12345 = block1234.combine(target_block=block_list[4], name='img12345.png')
+        # block12345.detect(right=MASK_SIZE)
+        #
+        # block123456 = block1234.combine(target_block=block_list[5], name='img123456.png')
+        # block123456.detect(right=MASK_SIZE)
 
 
 def get_dimensions(image, homography):
@@ -436,7 +434,6 @@ if __name__ == "__main__":
     Mosaic()
 
 __author__ = 'gorigan'
-
 
 
 # junk yard
