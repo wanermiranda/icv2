@@ -2,37 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb86ebeb-6be3-4e4d-b88d-b24ec13c70c0" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img1234.png" afterPath="$PROJECT_DIR$/img1234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img12345.png" afterPath="$PROJECT_DIR$/img12345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img123456.png" afterPath="$PROJECT_DIR$/img123456.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img234.png" afterPath="$PROJECT_DIR$/img234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img2345.png" afterPath="$PROJECT_DIR$/img2345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img34.png" afterPath="$PROJECT_DIR$/img34.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img1234.png" afterPath="$PROJECT_DIR$/wrapped_1_img1234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img12345.png" afterPath="$PROJECT_DIR$/wrapped_1_img12345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img234.png" afterPath="$PROJECT_DIR$/wrapped_1_img234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img2345.png" afterPath="$PROJECT_DIR$/wrapped_1_img2345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img3.jpg" afterPath="$PROJECT_DIR$/wrapped_1_img3.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_1_img34.png" afterPath="$PROJECT_DIR$/wrapped_1_img34.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img1234.png" afterPath="$PROJECT_DIR$/wrapped_2_img1234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img12345.png" afterPath="$PROJECT_DIR$/wrapped_2_img12345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img234.png" afterPath="$PROJECT_DIR$/wrapped_2_img234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img2345.png" afterPath="$PROJECT_DIR$/wrapped_2_img2345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img3.jpg" afterPath="$PROJECT_DIR$/wrapped_2_img3.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_2_img34.png" afterPath="$PROJECT_DIR$/wrapped_2_img34.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img1.jpg" afterPath="$PROJECT_DIR$/wrapped_img1.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img1234.png" afterPath="$PROJECT_DIR$/wrapped_img1234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img12345.png" afterPath="$PROJECT_DIR$/wrapped_img12345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img2.jpg" afterPath="$PROJECT_DIR$/wrapped_img2.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img234.png" afterPath="$PROJECT_DIR$/wrapped_img234.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img2345.png" afterPath="$PROJECT_DIR$/wrapped_img2345.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img3.jpg" afterPath="$PROJECT_DIR$/wrapped_img3.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img34.png" afterPath="$PROJECT_DIR$/wrapped_img34.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img4.jpg" afterPath="$PROJECT_DIR$/wrapped_img4.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img5.jpg" afterPath="$PROJECT_DIR$/wrapped_img5.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wrapped_img6.jpg" afterPath="$PROJECT_DIR$/wrapped_img6.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imagehelpers.py" afterPath="$PROJECT_DIR$/imagehelpers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tp2.py" afterPath="$PROJECT_DIR$/tp2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="icv2.iws" />
@@ -404,7 +373,13 @@
       <option name="project" value="LOCAL" />
       <updated>1431885875218</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Not yet, need to use the inverse">
+      <created>1431951768268</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1431951768268</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
