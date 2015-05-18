@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 import threadingloops as tl
+import math
+
 
 def determinant(homography):
     return (homography[0, 1] * homography[1, 1] * homography[2, 2]) - (
@@ -114,20 +116,26 @@ def warp_pure_pt(h, pt):
     return np.array([u, v])
 
 
-def warp_pure_pixel_internal(h, x, y):
-    u = (h[0, 0] * x) + (h[0, 1] * y) + (h[0, 2])
-    v = (h[1, 0] * x) + (h[1, 1] * y) + (h[1, 2])
-    w = (h[2, 0] * x) + (h[2, 1] * y) + (h[2, 2])
+def warp_pure_pixel_internal(h_inv, x, y):
+    u = (h_inv[0, 0] * x) + (h_inv[0, 1] * y) + (h_inv[0, 2])
+    v = (h_inv[1, 0] * x) + (h_inv[1, 1] * y) + (h_inv[1, 2])
+    w = (h_inv[2, 0] * x) + (h_inv[2, 1] * y) + (h_inv[2, 2])
     u /= w
     v /= w
     return v, u
 
 
-def warp_pure_pixel(image, out_image, y, x, args):
+# because we are using the inverse homography, the output image will be the input
+# H_INV x P' = P from P' = H x P
+def warp_pure_pixel(warp_image, out_image, y, x, args):
+    h_inv, min_u, min_v, new_h, new_w = args
+    orig_h, orig_w = out_image.shape[:2]
 
-    h, min_u, min_v, new_h, new_w = args
-    v, u = warp_pure_pixel_internal(h, x, y)
-    u += min_u
-    v += min_v
-    if (u < new_w - 1) and (v < new_h - 1) and (u >= 0) and (v >= 0):
-        out_image[v, u] = image[y, x]
+    v, u = warp_pure_pixel_internal(h_inv, x, y)
+    u -= min_u
+    v -= min_v
+
+    # u = math.ceil(u)
+    # v = math.ceil(v)
+    if (u < orig_w) and (v < orig_h) and (u >= 0) and (v >= 0):
+        warp_image[y, x] = out_image[v, u]

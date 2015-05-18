@@ -5,9 +5,9 @@ import math
 import imagehelpers as ih
 import threadingloops as tl
 
-MASK_SIZE = 500
+MASK_SIZE = 3000
 
-MAX_HEIGHT = 800.00
+MAX_HEIGHT = 1600.00
 
 SIFT_SIFT = 0
 FAST_BRIEF = 1
@@ -204,22 +204,23 @@ class ImageBlock:
             if normal_pt[1] < min_y:
                 min_y = normal_pt[1]
 
-        max_x += -1*min_x
-        max_y += -1*min_y
 
         min_x *= -1
         min_y *= -1
+
+        max_x += min_x
+        max_y += min_y
 
         print min_y, min_x, max_y, max_x
         return min_y, min_x, max_y, max_x
 
     def warp_pure(self, h, new_h, new_w, min_u=0, min_v=0):
         print 'Warp'
-
+        h_inv = np.linalg.inv(h)
         warped_img = np.zeros((new_h, new_w, 3), np.uint8)
 
-        args = h, min_u, min_v, new_h, new_w
-        tl.ThreadingLoopsImage(4, self.get_image(), warped_img, ih.warp_pure_pixel, args).execute()
+        args = h_inv, min_u, min_v, new_h, new_w
+        tl.ThreadingLoopsImage(4, warped_img, self.get_image(), ih.warp_pure_pixel, args).execute()
         return warped_img
 
     def combine(self, target_block, name):
@@ -246,6 +247,8 @@ class ImageBlock:
     def blend_image(self, target, homography):
 
         min_x, min_y, new_h, new_w, target_img_wrp = self.warp_target(homography, target)
+
+        ih.save_image(target_img_wrp, 'wrapped_' + target.get_path())
 
         self_img_wrp = self.warp_pure(np.identity(3), new_h, new_w, min_x, min_y)
         ih.save_image(self_img_wrp, 'wrapped_' + self.get_path())
@@ -353,20 +356,21 @@ class Mosaic:
         # result = ImageBlock('img2_warp.jpg', target_img_wrp)
         # result = ImageBlock('img123.jpg',  block_list[2].blend_image(result, h_list[1]))
 
-        result = block_list[3].combine(block_list[2], 'img34')
-        result.detect()
+        result = block_list[2].combine(block_list[3], 'step1')
+        result.detect(left=MASK_SIZE)
 
-        result = result.combine(block_list[1], 'img234')
-        result.detect()
+        # #
+        result = result.combine(block_list[1], 'step2')
+        result.detect(left=MASK_SIZE)
+        #
+        result = result.combine(block_list[0], 'step3')
+        result.detect(right=MASK_SIZE)
 
-        result = result.combine(block_list[4], 'img2345')
-        result.detect()
+        result = result.combine(block_list[4], 'step4')
+        result.detect(right=MASK_SIZE)
 
-        result = result.combine(block_list[0], 'img12345')
-        result.detect()
-
-        result = result.combine(block_list[5], 'img123456')
-        result.detect()
+        result = result.combine(block_list[5], 'step5')
+        result.detect(right=MASK_SIZE)
 
         # for b, t in img_combinations:
         #
