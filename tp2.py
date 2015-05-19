@@ -218,15 +218,6 @@ class Mosaic:
             img_block.detect()
             block_list.append(img_block)
 
-        h_list = []
-
-        for idx in range(0, IMG_COUNT - 1):
-            next_img = block_list[idx + 1]
-            main_img = block_list[idx]
-            matches = next_img.match(main_img)
-            homography = next_img.gen_homography(main_img, matches)
-            h_list.append(homography)
-
         result = block_list[2].blend(block_list[3], str(method) + '_' + str(blend_type) + '_step1.png', blend_type)
         result.detect(left=MASK_SIZE)
 
@@ -240,7 +231,6 @@ class Mosaic:
         result.detect(right=MASK_SIZE)
 
         result.blend(block_list[5], str(method) + '_' + str(blend_type) + '_step5.png', blend_type)
-
 
 if __name__ == "__main__":
     arg_list = sys.argv[1:]

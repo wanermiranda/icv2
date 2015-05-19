@@ -344,6 +344,25 @@ def warp_pure_pixel_internal(h_inv, x, y):
     return v, u
 
 
+# A function that is used inside the threaded loop to get the new pixels position
+# for the target and the main image
+#
+# Input params:
+# args is a support tuple for arguments
+# h_inv = Homography -1
+# min_u = minimum position in x for the target warped image
+# min_v = minimum position in y for the target warped image
+# identity = identity matrix for the main image
+# main_image = the main image
+# blend_type = the blend type: FEATHER, MERGE or AVERAGE
+# target_image = image to be warped
+# x = position the loop for the big image
+# y = position the loop for the big image
+#
+# Output Params
+# big_image = the image that will receive the blend of the other 2 images
+
+
 def warp_and_blend(big_image, target_image, y, x, args):
     h_inv, min_u, min_v, identity, main_image, blend_type = args
 
