@@ -197,12 +197,12 @@ class ImageBlock:
 
         identity = np.identity(3)
 
-        args = h_inv, min_x, min_y, identity, self.get_image(), blend_type
+        arguments = h_inv, min_x, min_y, identity, self.get_image(), blend_type
 
         enlarged_base_img = np.zeros((new_h, new_w, 3), np.uint8)
 
         print 'warping'
-        tl.ThreadingLoopsImage(4, enlarged_base_img, target.get_image(), ih.warp_and_blend, args).execute()
+        tl.ThreadingLoopsImage(4, enlarged_base_img, target.get_image(), ih.warp_and_blend, arguments).execute()
 
         return enlarged_base_img
 
@@ -255,4 +255,3 @@ if __name__ == "__main__":
         elif opt in ("-b", "--blending"):
             bld = int(arg)
     Mosaic(mtd, bld)
-
