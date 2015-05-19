@@ -4,6 +4,14 @@ import numpy as np
 import threadingloops as tl
 import math
 
+SIFT_SIFT = 0
+FAST_BRIEF = 1
+ORB_ORB = 2
+
+MERGE = 0
+AVERAGE = 1
+FEATHERING = 2
+
 
 def determinant(homography):
     return (homography[0, 1] * homography[1, 1] * homography[2, 2]) - (
@@ -12,8 +20,7 @@ def determinant(homography):
 
 # Support function to save images to files
 def save_image(img, name):
-    plt.imshow(img)
-    plt.savefig(name)
+    cv2.imwrite(name, img)
 
 
 # Support function to show images
@@ -87,11 +94,11 @@ def singleton(cls):
 
 def apply_median(warped_img, skip_zeros=True):
     print "Median"
-    tl.ThreadingLoopsImage(4, warped_img, warped_img, get_median_for, skip_zeros).execute()
+    tl.ThreadingLoopsImage(4, warped_img, warped_img, get_avg_9x9, skip_zeros).execute()
     return warped_img
 
 
-def get_median_for(img, img_out, y, x, skip_zeros=True):
+def get_avg_9x9(img, img_out, y, x, skip_zeros=True):
     if (img[y, x] == np.array([0, 0, 0])).all() or not skip_zeros:
         b = g = r = 0
         max_h, max_w = img.shape[:2]
@@ -111,6 +118,218 @@ def get_median_for(img, img_out, y, x, skip_zeros=True):
         img_out[y, x] = np.array([b, g, r])
 
 
+def in_bounds(x, y, img):
+    img_h, img_w = img.shape[:2]
+    return (x < img_w) and (y < img_h) and (x >= 0) and (y >= 0)
+
+
+def get_dimensions(h, img):
+        img_h, img_w = img.shape[:2]
+
+        base_p1 = [0, 0]
+        base_p2 = [img_w, 0]
+        base_p3 = [0, img_h]
+        base_p4 = [img_w, img_h]
+
+        max_x = 0
+        max_y = 0
+        min_x = 0
+        min_y = 0
+
+        for pt in [base_p1, base_p2, base_p3, base_p4]:
+
+            # transposed matrix
+            normal_pt = warp_pure_pt(h, pt)
+
+            if normal_pt[0] > max_x:
+                max_x = normal_pt[0]
+
+            if normal_pt[1] > max_y:
+                max_y = normal_pt[1]
+
+            if normal_pt[0] < min_x:
+                min_x = normal_pt[0]
+
+            if normal_pt[1] < min_y:
+                min_y = normal_pt[1]
+
+        min_x = math.ceil(min_x * -1)
+        min_y = math.ceil(min_y * -1)
+
+        max_x = math.ceil(max_x + min_x)
+        max_y = math.ceil(max_y + min_y)
+
+        return min_y, min_x, max_y, max_x
+
+
+def intersection_coord(value1, value2):
+
+    if value1 > value2:
+        max_value = value1
+        min_value = value2
+    else:
+        max_value = value2
+        min_value = value1
+
+    diff = max_value - min_value
+    return (min_value + diff), (max_value - diff)
+
+
+def get_roi(img1_new_dim, img2_new_dim):
+    min1_y, min1_x, max1_y, max1_x = img1_new_dim
+    min2_y, min2_x, max2_y, max2_x = img2_new_dim
+
+    if most_left(img1_new_dim, img2_new_dim):
+        roi_x = intersection_coord(max1_x, min2_x)
+    else:
+        roi_x = intersection_coord(max2_x, min1_x)
+
+    if most_bottom(img1_new_dim, img2_new_dim):
+        roi_y = intersection_coord(max1_y, min2_y)
+    else:
+        roi_y = intersection_coord(max2_y, min1_y)
+
+    return roi_x, roi_y
+
+
+def most_left(img1_new_dim, img2_new_dim):
+    min1_y, min1_x, max1_y, max1_x = img1_new_dim
+    min2_y, min2_x, max2_y, max2_x = img2_new_dim
+    return max1_x < max2_x
+
+
+def most_bottom(img1_new_dim, img2_new_dim):
+    min1_y, min1_x, max1_y, max1_x = img1_new_dim
+    min2_y, min2_x, max2_y, max2_x = img2_new_dim
+    return max1_y < max2_y
+
+
+# using L1
+def get_weight(img1_new_dim, img2_new_dim, roi, x, y, sharp=0.02):
+    (roi_x1, roi_x2), (roi_y1, roi_y2) = roi
+    if (roi_x1 <= x <= roi_x2) and (roi_y1 <= y <= roi_y2):
+        if most_left(img1_new_dim, img2_new_dim):
+            w1 = roi_x2 - x
+        else:
+            w1 = roi_x1 + x
+
+        if most_bottom(img1_new_dim, img2_new_dim):
+            w1 += roi_y2 - y
+        else:
+            w1 += roi_y1 + y
+
+        w1 *= sharp
+    else:
+        w1 = 1
+
+    # threshold
+    if w1 > 1:
+        w1 = 1
+    return w1
+
+
+def get_one_of(target_pt, img1, main_pt, img2):
+        x1, y1 = target_pt
+        x2, y2 = main_pt
+
+        b = 0
+        g = 0
+        r = 0
+
+        if in_bounds(x1, y1, img1):
+            b = img1[y1, x1][0]
+            g = img1[y1, x1][1]
+            r = img1[y1, x1][2]
+        else:
+            if in_bounds(x2, y2, img2):
+                b = img2[y2, x2][0]
+                g = img2[y2, x2][1]
+                r = img2[y2, x2][2]
+
+        return np.array([b, g, r])
+
+
+def get_avg_2point(target_pt, img1, main_pt, img2):
+        x1, y1 = target_pt
+        x2, y2 = main_pt
+
+        div = 2
+
+        b1 = 0
+        g1 = 0
+        r1 = 0
+
+        b2 = 0
+        g2 = 0
+        r2 = 0
+
+        if in_bounds(x1, y1, img1):
+            b1 = img1[y1, x1][0]
+            g1 = img1[y1, x1][1]
+            r1 = img1[y1, x1][2]
+        else:
+            div = 1
+
+        if in_bounds(x2, y2, img2):
+            b2 = img2[y2, x2][0]
+            g2 = img2[y2, x2][1]
+            r2 = img2[y2, x2][2]
+        else:
+            div = 1
+
+        if ((b1 + g1 + r1) == 0) or ((b2 + g2 + r2) == 0):
+            div = 1
+
+        b = (b1 + b2) / div
+        g = (g1 + g2) / div
+        r = (r1 + r2) / div
+
+        return np.array([b, g, r])
+
+
+def feathering_2point(target_pt, img1, img1_new_dim, main_pt, img2, img2_new_dim, roi):
+
+        x1, y1 = target_pt
+        x2, y2 = main_pt
+
+        b1 = 0
+        g1 = 0
+        r1 = 0
+
+        b2 = 0
+        g2 = 0
+        r2 = 0
+
+        if in_bounds(x1, y1, img1):
+            b1 = img1[y1, x1][0]
+            g1 = img1[y1, x1][1]
+            r1 = img1[y1, x1][2]
+            w1 = get_weight(img1_new_dim, img2_new_dim, roi, x1, y1)
+            div = w1
+        else:
+            div = 1
+            w1 = 0
+
+        if in_bounds(x2, y2, img2):
+            b2 = img2[y2, x2][0]
+            g2 = img2[y2, x2][1]
+            r2 = img2[y2, x2][2]
+            w2 = get_weight(img1_new_dim, img2_new_dim, roi, x2, y2)
+            div += w2
+        else:
+            div = 1
+            w2 = 0
+
+        if ((b1 + g1 + r1) == 0) or ((b2 + g2 + r2) == 0):
+            div = 1
+
+        b = (b1*w1 + b2*w2) / div
+        g = (g1*w1 + g2*w2) / div
+        r = (r1*w1 + r2*w2) / div
+
+        return np.array([b, g, r])
+
+
 def warp_pure_pt(h, pt):
     v, u = warp_pure_pixel_internal(h, pt[0], pt[1])
     return np.array([u, v])
@@ -125,17 +344,33 @@ def warp_pure_pixel_internal(h_inv, x, y):
     return v, u
 
 
-# because we are using the inverse homography, the output image will be the input
-# H_INV x P' = P from P' = H x P
-def warp_pure_pixel(warp_image, out_image, y, x, args):
-    h_inv, min_u, min_v, new_h, new_w = args
-    orig_h, orig_w = out_image.shape[:2]
+def warp_and_blend(big_image, target_image, y, x, args):
+    h_inv, min_u, min_v, identity, main_image, blend_type = args
+
+    y -= min_v
+    x -= min_u
 
     v, u = warp_pure_pixel_internal(h_inv, x, y)
-    u -= min_u
-    v -= min_v
+    v = math.ceil(v)
+    u = math.ceil(u)
 
-    # u = math.ceil(u)
-    # v = math.ceil(v)
-    if (u < orig_w) and (v < orig_h) and (u >= 0) and (v >= 0):
-        warp_image[y, x] = out_image[v, u]
+    v1, u1 = warp_pure_pixel_internal(identity, x, y)
+    v1 = math.ceil(v1)
+    u1 = math.ceil(u1)
+
+    y += min_v
+    x += min_u
+
+    target_dim = get_dimensions(h_inv, target_image)
+    main_dim = get_dimensions(identity, main_image)
+
+    roi = get_roi(target_dim, main_dim)
+
+    target_pt = u, v
+    main_pt = u1, v1
+    if blend_type == FEATHERING:
+        big_image[y, x] = feathering_2point(target_pt, target_image, target_dim, main_pt, main_image, main_dim, roi)
+    if blend_type == AVERAGE:
+        big_image[y, x] = get_avg_2point(target_pt, target_image, main_pt, main_image)
+    if blend_type == MERGE:
+        big_image[y, x] = get_one_of(target_pt, target_image, main_pt, main_image)
