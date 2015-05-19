@@ -2,39 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb86ebeb-6be3-4e4d-b88d-b24ec13c70c0" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/img1234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/img12345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/img123456.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/img234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/img2345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/img34.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_1_img1234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_1_img12345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_1_img234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_1_img2345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_1_img3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_1_img34.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_2_img1234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_2_img12345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_2_img234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_2_img2345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_2_img3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_2_img34.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img1234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img12345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img234.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img2345.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img34.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img4.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img5.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wrapped_img6.jpg" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imagehelpers.py" afterPath="$PROJECT_DIR$/imagehelpers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tp2.py" afterPath="$PROJECT_DIR$/tp2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="icv2.iws" />
@@ -59,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="tp2.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tp2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tp2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7162872" vertical-offset="3929" max-vertical-offset="4932">
-              <caret line="241" column="80" selection-start-line="241" selection-start-column="80" selection-end-line="241" selection-end-column="80" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3839" max-vertical-offset="4752">
+              <caret line="225" column="0" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
               <folding>
                 <element signature="e#15#25#0" expanded="true" />
               </folding>
@@ -83,14 +51,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="imagehelpers.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="imagehelpers.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/imagehelpers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4212" max-vertical-offset="6858">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-4.4763575" vertical-offset="2592" max-vertical-offset="8586">
+              <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -105,8 +71,8 @@
       <list>
         <option value="$PROJECT_DIR$/Threading_Loops.py" />
         <option value="$PROJECT_DIR$/threadingloops.py" />
-        <option value="$PROJECT_DIR$/imagehelpers.py" />
         <option value="$PROJECT_DIR$/tp2.py" />
+        <option value="$PROJECT_DIR$/imagehelpers.py" />
       </list>
     </option>
   </component>
@@ -430,7 +396,25 @@
       <option name="project" value="LOCAL" />
       <updated>1431951776081</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="running perfect &#10;">
+      <created>1432045762837</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1432045762837</updated>
+    </task>
+    <task id="LOCAL-00013" summary="running perfect &#10;">
+      <created>1432046799199</created>
+      <option name="number" value="00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1432046799199</updated>
+    </task>
+    <task id="LOCAL-00014" summary="running perfect &#10;">
+      <created>1432047730544</created>
+      <option name="number" value="00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1432047730544</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -450,7 +434,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19300106" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3227223" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3227223" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="1060" y="127" width="753" height="853" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -501,7 +485,8 @@
     <MESSAGE value="Mask corrected." />
     <MESSAGE value="Starting warp perspective" />
     <MESSAGE value="Not yet, need to use the inverse" />
-    <option name="LAST_COMMIT_MESSAGE" value="Not yet, need to use the inverse" />
+    <MESSAGE value="running perfect &#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="running perfect &#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -914,23 +899,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imagehelpers.py">
+    <entry file="file://$PROJECT_DIR$/tp2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6858">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3839" max-vertical-offset="4752">
+          <caret line="225" column="0" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#15#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tp2.py">
+    <entry file="file://$PROJECT_DIR$/imagehelpers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7162872" vertical-offset="3929" max-vertical-offset="4932">
-          <caret line="241" column="80" selection-start-line="241" selection-start-column="80" selection-end-line="241" selection-end-column="80" />
-          <folding>
-            <element signature="e#15#25#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-4.4763575" vertical-offset="2592" max-vertical-offset="8586">
+          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>

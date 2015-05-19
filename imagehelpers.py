@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import cv2
 import numpy as np
-import threadingloops as tl
 import math
 
 SIFT_SIFT = 0
@@ -13,6 +12,7 @@ AVERAGE = 1
 FEATHERING = 2
 
 
+# support function calc the homography determinant value
 def determinant(homography):
     return (homography[0, 1] * homography[1, 1] * homography[2, 2]) - (
         homography[2, 0] * homography[1, 1] * homography[0, 2])
@@ -92,51 +92,40 @@ def singleton(cls):
     return get_instance
 
 
-def apply_median(warped_img, skip_zeros=True):
-    print "Median"
-    tl.ThreadingLoopsImage(4, warped_img, warped_img, get_avg_9x9, skip_zeros).execute()
-    return warped_img
-
-
-def get_avg_9x9(img, img_out, y, x, skip_zeros=True):
-    if (img[y, x] == np.array([0, 0, 0])).all() or not skip_zeros:
-        b = g = r = 0
-        max_h, max_w = img.shape[:2]
-        pixels = 0
-        for x1 in range(x-1, x+2):
-            for y1 in range(y-1, y+2):
-                if (y1 < max_h) and (x1 < max_w):
-                    if (not (x1 == x) and (y1 == y)) or not skip_zeros:
-                        b += img[y1, x1][0]
-                        g += img[y1, x1][1]
-                        r += img[y1, x1][2]
-                        pixels += 1
-        b /= pixels
-        g /= pixels
-        r /= pixels
-
-        img_out[y, x] = np.array([b, g, r])
-
-
+# A function that checks if the point is inside the image
+# Input params:
+# x = position for the loop in the image
+# y = position for the loop in the image
+# img = used to get the inbox size
+# Output Params
+# true if the x and y are inside the image
 def in_bounds(x, y, img):
     img_h, img_w = img.shape[:2]
     return (x < img_w) and (y < img_h) and (x >= 0) and (y >= 0)
 
 
+# A function that warp the corners to get the max and values for the new image
+# Input params:
+# h = Homography
+# x = position for the loop in the big image
+# y = position for the loop in the big image
+#
+# Output Params
+# u, v = coordinates on the original image
 def get_dimensions(h, img):
         img_h, img_w = img.shape[:2]
 
-        base_p1 = [0, 0]
-        base_p2 = [img_w, 0]
-        base_p3 = [0, img_h]
-        base_p4 = [img_w, img_h]
+        corner_tl = [0, 0]
+        corner_tr = [img_w, 0]
+        corner_bl = [0, img_h]
+        corner_br = [img_w, img_h]
 
         max_x = 0
         max_y = 0
         min_x = 0
         min_y = 0
 
-        for pt in [base_p1, base_p2, base_p3, base_p4]:
+        for pt in [corner_tl, corner_tr, corner_bl, corner_br]:
 
             # transposed matrix
             normal_pt = warp_pure_pt(h, pt)
@@ -162,6 +151,12 @@ def get_dimensions(h, img):
         return min_y, min_x, max_y, max_x
 
 
+# A function that is used to calc the max, min and difference between values
+# Input params:
+# value1 = a number or coordinate in the same axis of the other value
+# value2 = a number or coordinate in the same axis of the other value
+# Output Params
+# returns the minimum value and maximum value considering the difference between them
 def intersection_coord(value1, value2):
 
     if value1 > value2:
@@ -175,6 +170,12 @@ def intersection_coord(value1, value2):
     return (min_value + diff), (max_value - diff)
 
 
+# A function that is used to calc the ROI for the blending
+# Input params:
+# img1_new_dim = new dimensions for the image 1 (min and max values in a tuple)
+# img2_new_dim = new dimensions for the image 2 (min and max values in a tuple)
+# Output Params
+# Return two sets of min and max values for x and y defining the roi
 def get_roi(img1_new_dim, img2_new_dim):
     min1_y, min1_x, max1_y, max1_x = img1_new_dim
     min2_y, min2_x, max2_y, max2_x = img2_new_dim
@@ -192,19 +193,31 @@ def get_roi(img1_new_dim, img2_new_dim):
     return roi_x, roi_y
 
 
+# A function that is used to check which image is on left
+# Input params:
+# img1_new_dim = new dimensions for the image 1 (min and max values in a tuple)
+# img2_new_dim = new dimensions for the image 2 (min and max values in a tuple)
+# Output Params
+# True if the im1 is on left, false otherwise
 def most_left(img1_new_dim, img2_new_dim):
     min1_y, min1_x, max1_y, max1_x = img1_new_dim
     min2_y, min2_x, max2_y, max2_x = img2_new_dim
     return max1_x < max2_x
 
 
+# A function that is used to check which image is on bottom
+# Input params:
+# img1_new_dim = new dimensions for the image 1 (min and max values in a tuple)
+# img2_new_dim = new dimensions for the image 2 (min and max values in a tuple)
+# Output Params
+# True if the im1 is on bottom, false otherwise
 def most_bottom(img1_new_dim, img2_new_dim):
     min1_y, min1_x, max1_y, max1_x = img1_new_dim
     min2_y, min2_x, max2_y, max2_x = img2_new_dim
     return max1_y < max2_y
 
 
-# A function that is used calc weight for the feathering blend
+# A function that is used to calc weight for the feathering blend
 # The weight is calculated based on
 # L1(P1 - BORDER1) + L1(P2 - BORDER2) * SHARP
 # L1 = L1 distance or Manhattan distance
@@ -239,7 +252,7 @@ def get_weight(img1_new_dim, img2_new_dim, roi, x, y, sharp=0.02):
     return w1
 
 
-# A function that is used calc the blend merging points
+# A function that is used to calc the blend merging points
 # for the target and the main image
 # P = P1(x,y) OR P2(x,y)
 # Input params:
@@ -271,7 +284,7 @@ def get_one_of(target_pt, img1, main_pt, img2):
         return np.array([b, g, r])
 
 
-# A function that is used calc the blend averaging points
+# A function that is used to calc the blend averaging points
 # for the target and the main image
 # P = (P1(x,y) + P2(x,y) / 2
 # Input params:
@@ -320,7 +333,7 @@ def get_avg_2point(img1_pt, img1, img2_pt, img2):
         return np.array([b, g, r])
 
 
-# A function that is used calc the blend feathering point
+# A function that is used to calc the blend feathering point
 # for the target and the main image
 #
 # Input params:
