@@ -204,7 +204,18 @@ def most_bottom(img1_new_dim, img2_new_dim):
     return max1_y < max2_y
 
 
-# using L1
+# A function that is used calc weight for the feathering blend
+# The weight is calculated based on
+# L1(P1 - BORDER1) + L1(P2 - BORDER2) * SHARP
+# L1 = L1 distance or Manhattan distance
+# Input params:
+# x, y = the point in the big image
+# img1_new_dim = new dimensions for the image 1 (min and max values in a tuple)
+# img2_new_dim = new dimensions for the image 2 (min and max values in a tuple)
+# roi = the region of interest that will be feathered and used to calc the weights
+# sharp = constant value to reduce the impact during the feathering
+# Output Params
+# the weight value to be applied during the feathearing
 def get_weight(img1_new_dim, img2_new_dim, roi, x, y, sharp=0.02):
     (roi_x1, roi_x2), (roi_y1, roi_y2) = roi
     if (roi_x1 <= x <= roi_x2) and (roi_y1 <= y <= roi_y2):
@@ -228,6 +239,17 @@ def get_weight(img1_new_dim, img2_new_dim, roi, x, y, sharp=0.02):
     return w1
 
 
+# A function that is used calc the blend merging points
+# for the target and the main image
+# P = P1(x,y) OR P2(x,y)
+# Input params:
+# img1_pt = the point in the target img1
+# img1 = target image
+# img2_pt = the point in the target img2
+# img2 = target image
+#
+# Output Params
+# The new pixel value (b, g, r)
 def get_one_of(target_pt, img1, main_pt, img2):
         x1, y1 = target_pt
         x2, y2 = main_pt
@@ -249,9 +271,20 @@ def get_one_of(target_pt, img1, main_pt, img2):
         return np.array([b, g, r])
 
 
-def get_avg_2point(target_pt, img1, main_pt, img2):
-        x1, y1 = target_pt
-        x2, y2 = main_pt
+# A function that is used calc the blend averaging points
+# for the target and the main image
+# P = (P1(x,y) + P2(x,y) / 2
+# Input params:
+# img1_pt = the point in the target img1
+# img1 = target image
+# img2_pt = the point in the target img2
+# img2 = target image
+#
+# Output Params
+# The new pixel value (b, g, r)
+def get_avg_2point(img1_pt, img1, img2_pt, img2):
+        x1, y1 = img1_pt
+        x2, y2 = img2_pt
 
         div = 2
 
@@ -287,10 +320,24 @@ def get_avg_2point(target_pt, img1, main_pt, img2):
         return np.array([b, g, r])
 
 
-def feathering_2point(target_pt, img1, img1_new_dim, main_pt, img2, img2_new_dim, roi):
+# A function that is used calc the blend feathering point
+# for the target and the main image
+#
+# Input params:
+# img1_pt = the point in the target img1
+# img1 = target image
+# img1_new_dim = new dimensions for the image 1 (min and max values in a tuple)
+# img2_pt = the point in the target img2
+# img2 = target image
+# img2_new_dim = new dimensions for the image 2 (min and max values in a tuple)
+# roi = the region of interest that will be feathered and used to calc the weights
+#
+# Output Params
+# The new pixel value (b, g, r)
+def feathering_2point(img1_pt, img1, img1_new_dim, img2_pt, img2, img2_new_dim, roi):
 
-        x1, y1 = target_pt
-        x2, y2 = main_pt
+        x1, y1 = img1_pt
+        x2, y2 = img2_pt
 
         b1 = 0
         g1 = 0
@@ -330,15 +377,32 @@ def feathering_2point(target_pt, img1, img1_new_dim, main_pt, img2, img2_new_dim
         return np.array([b, g, r])
 
 
+# A wrapper for warp_pure_pixel_internal
+# P1 = H x P
+# Input params:
+# h = Homography
+# pt = tuple of coordinates position for the loop in the big image
+#
+# Output Params
+# u, v = coordinates on the original image
 def warp_pure_pt(h, pt):
     v, u = warp_pure_pixel_internal(h, pt[0], pt[1])
     return np.array([u, v])
 
 
-def warp_pure_pixel_internal(h_inv, x, y):
-    u = (h_inv[0, 0] * x) + (h_inv[0, 1] * y) + (h_inv[0, 2])
-    v = (h_inv[1, 0] * x) + (h_inv[1, 1] * y) + (h_inv[1, 2])
-    w = (h_inv[2, 0] * x) + (h_inv[2, 1] * y) + (h_inv[2, 2])
+# A function that calc a new position for the point
+# P1 = H x P
+# Input params:
+# h = Homography
+# x = position for the loop in the big image
+# y = position for the loop in the big image
+#
+# Output Params
+# u, v = coordinates on the original image
+def warp_pure_pixel_internal(h, x, y):
+    u = (h[0, 0] * x) + (h[0, 1] * y) + (h[0, 2])
+    v = (h[1, 0] * x) + (h[1, 1] * y) + (h[1, 2])
+    w = (h[2, 0] * x) + (h[2, 1] * y) + (h[2, 2])
     u /= w
     v /= w
     return v, u

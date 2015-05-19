@@ -223,7 +223,7 @@ class Mosaic:
 
         result = result.blend(block_list[1], str(method) + '_' + str(blend_type) + '_step2.png', blend_type)
         result.detect(left=MASK_SIZE)
-        #
+
         result = result.blend(block_list[0], str(method) + '_' + str(blend_type) + '_step3.png', blend_type)
         result.detect(right=MASK_SIZE)
 
