@@ -12,6 +12,27 @@ AVERAGE = 1
 FEATHERING = 2
 
 
+# Support function to copy an image to another new with new size
+def copy_with(img, h, w):
+    base_image = np.zeros((h, w, 3), np.uint8)
+    img_h, img_w = img.shape[:2]
+    base_image[:img_h, :img_w] = img[:img_h, :img_w]
+    return base_image
+
+
+# support function to load image till the max height
+def load_image(path, max_height=None):
+    result_image = cv2.imread(path)
+    h, w = result_image.shape[:2]
+
+    if not (max_height is None):
+        if h > max_height:
+            scale = max_height / h
+            result_image = cv2.resize(result_image, None, fx=scale, fy=scale)
+
+    return result_image
+
+
 # support function calc the homography determinant value
 def determinant(homography):
     return (homography[0, 1] * homography[1, 1] * homography[2, 2]) - (
@@ -39,15 +60,19 @@ def image_hist(img):
     return colors_hist
 
 
+# Support function to calculate the difference image
+def get_diff_image(ground_truth, target):
+    return cv2.subtract(ground_truth, target)
+
 # Support function to calculate the mean squared error
-def get_mse(query, target):
-    (m, n) = query.shape[:2]
+def get_mse(ground_truth, target):
+    (m, n) = ground_truth.shape[:2]
     if (m == 3) and (n == 256):
-        query = query[0:3, 0:256]
+        ground_truth = ground_truth[0:3, 0:256]
         target = target[0:3, 0:256]
     # (m, n) = query.shape[:2]
     # print str(m) + ", " + str(n)
-    sums = np.power(np.array(query) - np.array(target), 2).sum()
+    sums = np.power(np.array(ground_truth) - np.array(target), 2).sum()
     return sums / (m * n)
 
 
@@ -470,3 +495,5 @@ def warp_and_blend(big_image, target_image, y, x, args):
         big_image[y, x] = get_avg_2point(target_pt, target_image, main_pt, main_image)
     if blend_type == MERGE:
         big_image[y, x] = get_one_of(target_pt, target_image, main_pt, main_image)
+
+

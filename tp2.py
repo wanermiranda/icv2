@@ -14,7 +14,7 @@ MAX_HEIGHT = 300.00
 IMG_COUNT = 6
 IMG_PREFIX = 'img'
 IMG_EXT = 'jpg'
-# IMG_GROUND_TRUTH = 'groundtruth.jpg'
+IMG_GROUND_TRUTH = 'groundtruth.jpg'
 
 
 # The class used to collect the method used in the run, with its detectors and matcher
@@ -232,14 +232,37 @@ class Mosaic:
 
         result.blend(block_list[5], str(method) + '_' + str(blend_type) + '_step5.png', blend_type)
 
+
+class Test:
+
+    def __init__(self, method, blend_type):
+
+        path = str(method) + '_' + str(blend_type) + '_step5.png'
+        ground_truth = ih.load_image(IMG_GROUND_TRUTH, MAX_HEIGHT)
+
+        print "Testing %s against %s" % (path, IMG_GROUND_TRUTH)
+
+        gh, gw = ground_truth.shape[:2]
+
+        result_image = ih.load_image(path, MAX_HEIGHT)
+        result_image = ih.copy_with(result_image, gh, gw)
+
+        max_error = (gh * gw * 3 * 255) / (gh * gw)
+
+        ih.save_image(ih.get_diff_image(ground_truth, result_image), str(method) + '_' + str(blend_type) + "_diff_img.png")
+
+        print "MSE : %f %%" % (ih.get_mse(ground_truth, result_image)*100/max_error)
+
+
 if __name__ == "__main__":
     arg_list = sys.argv[1:]
     mtd = ih.SIFT_SIFT
     bld = ih.MERGE
+    test = True
     try:
-        opts, args = getopt.getopt(arg_list, "hm:b:", ["method=", "blending="])
+        opts, args = getopt.getopt(arg_list, "hm:b:t", ["method=", "blending="])
     except getopt.GetoptError:
-        print 'example: tp2.py -m 0 -b 0 ' \
+        print 'example: tp2.py -m 0 -b 0 -t' \
               '\n --method: 0 = SIFT_SIFT, 1 = FAST_BRIEF, 2 = ORB_ORB ' \
               '\n --blender: 0 = MERGE, 1 = AVERAGE, 2 = FEATHERING'
         sys.exit(2)
@@ -254,4 +277,10 @@ if __name__ == "__main__":
             mtd = int(arg)
         elif opt in ("-b", "--blending"):
             bld = int(arg)
-    Mosaic(mtd, bld)
+        elif opt in ("-t", "--test"):
+            test = True
+
+    if not test:
+        Mosaic(mtd, bld)
+    else:
+        Test(mtd, bld)
